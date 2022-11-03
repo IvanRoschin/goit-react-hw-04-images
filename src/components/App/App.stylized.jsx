@@ -1,5 +1,12 @@
 import styled from 'styled-components';
 
+export const AppStyle = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 16px;
+  padding-bottom: 24px;
+`;
+
 export const PageTitle = styled.h1`
   padding-left: ${p => p.theme.space[5]}px;
   font-family: ${p => p.theme.fonts.heading};

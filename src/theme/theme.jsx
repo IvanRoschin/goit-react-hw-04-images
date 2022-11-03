@@ -4,7 +4,7 @@ export const theme = {
     red: '#B22222',
     silver: '#C0C0C0',
     text: '#4682B4',
-    accent: '#F0F8FF',
+    accent: '#3f51b5',
     border: '#add8e6',
     primary: '#07c',
     secondary: '#05a',
@@ -41,6 +41,7 @@ export const theme = {
   },
   radii: {
     none: '0',
+    mini: '3px',
     normal: '15px',
     round: '50%',
   },
@@ -50,5 +51,6 @@ export const theme = {
 
   shadows: {
     textShadow: '10px 10px 5px 0px rgba(0,0,0,0.75);',
+    searchbarShadow: '',
   },
 };
