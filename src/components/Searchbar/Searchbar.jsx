@@ -2,6 +2,8 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { BiSearch } from 'react-icons/bi';
 import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import {
   SearchbarHeader,
   SearchForm,
@@ -12,22 +14,22 @@ import {
 
 export default class Searchbar extends Component {
   static defaultProps = {
-    name: PropTypes.string.isRequired,
+    request: PropTypes.string.isRequired,
   };
 
   state = {
-    name: '',
+    request: '',
   };
 
   handleChange = e => {
     this.setState({
-      [e.target.name]: e.target.value.toLowerCase(),
+      request: e.target.value.toLowerCase(),
     });
   };
 
   handleSubmit = e => {
     e.preventDefault();
-    if (this.state.name.trim() === '') {
+    if (this.state.request.trim() === '') {
       return toast.error('Please, type search', {
         position: 'top-right',
         autoClose: 3000,
@@ -39,12 +41,12 @@ export default class Searchbar extends Component {
         theme: 'colored',
       });
     }
-    this.props.onSubmit(this.state.name);
-    this.setState({ name: '' });
+    this.props.onSubmit(this.state.request);
+    this.setState({ request: '' });
   };
 
   render() {
-    const { name } = this.state;
+    const { request } = this.state;
     return (
       <SearchbarHeader onSubmit={this.handleSubmit}>
         <SearchForm>
@@ -53,10 +55,9 @@ export default class Searchbar extends Component {
             <SearchFormlabel>Search</SearchFormlabel>
           </SearchFormButton>
           <SearchFormInput
-            className="input"
             type="text"
             name="name"
-            value={name}
+            value={request}
             autoComplete="off"
             autoFocus
             placeholder="Search images and photos"

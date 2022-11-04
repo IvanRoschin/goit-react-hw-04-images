@@ -1,9 +1,4 @@
 import PropTypes from 'prop-types';
-import {
-  ContactListLi,
-  ContactListData,
-  ContactListButton,
-} from './ImageGellaryItem.stylized';
 
 export const ImageGalleryItem = ({ id, url, alt }) => {
   return (
