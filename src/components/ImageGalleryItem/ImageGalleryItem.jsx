@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-export const ImageGalleryItem = ({ id, url, alt }) => {
+export const ImageGalleryItem = ({ images }) => {
   return (
     <li className="gallery-item" key={id}>
       <img src="" alt="" />
