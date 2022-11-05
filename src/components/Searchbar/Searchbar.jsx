@@ -15,6 +15,7 @@ import {
 export default class Searchbar extends Component {
   static defaultProps = {
     request: PropTypes.string.isRequired,
+    onSubmit: PropTypes.func.isRequired,
   };
 
   state = {

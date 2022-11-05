@@ -15,8 +15,14 @@ export const fetchImages = async (request, page) => {
 
   try {
     const response = await axios(options);
-    return response.data.hits;
+    if (response.data.total === 0) {
+      return Promise.reject(new Error('Where are no results for your request'));
+    } else {
+      const hits = response.data.hits;
+      const total = response.data.total;
+      return { hits, total };
+    }
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
 };

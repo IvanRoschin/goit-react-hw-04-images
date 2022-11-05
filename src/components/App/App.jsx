@@ -1,29 +1,29 @@
 import React, { Component } from 'react';
-import { ToastContainer } from 'react-toastify';
 import { fetchImages } from 'Api/Api';
+import ErrorMessage from 'components/ErrorMessage';
 import { AppStyle } from './App.stylized';
-import { Audio } from 'react-loader-spinner';
 
 import Searchbar from 'components/Searchbar';
-// import ImageGallery from 'components/ImageGallery';
+import { ImageGallery } from 'components/ImageGallery/ImageGallery';
 
-export class App extends Component {
+export default class App extends Component {
   state = {
     images: [],
     request: '',
     page: 1,
     total: 0,
     largeImageURL: '',
-    loading: false,
     message: '',
+    error: null,
+    status: 'idle',
   };
+
+  // handleFormSubmit = request => {
+  //   this.setState({ request, images: [], page: 1, total: 0 });
+  // };
 
   handleFormSubmit = request => {
-    this.setState({ request, images: [], page: 1, total: 0 });
-  };
-
-  onImageClick = largeImageURL => {
-    this.setState({ largeImageURL });
+    this.setState({ request });
   };
 
   componentDidMount() {
@@ -32,63 +32,51 @@ export class App extends Component {
     this.setState({
       message: 'To display pictures, enter a query in the search field',
     });
-    // fetchImages(request, page, per_page);
   }
 
   async componentDidUpdate(prevProps, prevState) {
     const { request, page } = this.state;
     if (prevState.request !== request || prevState.page !== page) {
-      console.log('Изменился риквест, нужно делать фетч');
-
-      this.setState({ loading: true });
+      this.setState({
+        status: 'pending',
+      });
 
       try {
-        const searchImages = await fetchImages(request, page);
+        const images = await fetchImages(request, page);
+        console.log('Vot eto prokiduvaem;', images.hits);
         this.setState(prevState => ({
-          images: [...prevState.images, ...searchImages],
-          loading: false,
+          images: [...prevState.images, ...images.hits],
+          total: images.total,
+          status: 'resolved',
         }));
       } catch (error) {
-        console.log(error);
+        this.setState({ status: 'rejected' });
       }
     }
   }
 
   render() {
-    return (
-      <AppStyle>
-        <Searchbar onSubmit={this.handleFormSubmit} />
-        {this.state.loading && (
-          <Audio
-            height="80"
-            width="80"
-            radius="9"
-            color="blue"
-            ariaLabel="three-dots-loading"
-            wrapperStyle
-            wrapperClass
-          />
-        )}
-        {/* <div>Loading...</div> */}
-
-        {/* <ImageGallery
-          request={this.state.request}
-          onClick={this.onImageClick}
-        /> */}
-        {/* {this.state.largeImageURL.length > 0 && <Modal></Modal>} */}
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="colored"
-        />
-      </AppStyle>
-    );
+    const { images, request, status } = this.state;
+    if (status === 'idle')
+      return <Searchbar onSubmit={this.handleFormSubmit} />;
+    if (status === 'pending') return <div> Loading...</div>;
+    if (status === 'rejected')
+      return (
+        <div>
+          <Searchbar onSubmit={this.handleFormSubmit} />
+          <ErrorMessage
+            message={`Sorry, but where are no images for your request ${request}`}
+          ></ErrorMessage>
+        </div>
+      );
+    if (status === 'resolved') {
+      return (
+        <AppStyle>
+          <Searchbar onSubmit={this.handleFormSubmit} />
+          <div> Gallery Photo must been here</div>
+          <ImageGallery images={images}></ImageGallery>
+        </AppStyle>
+      );
+    }
   }
 }
