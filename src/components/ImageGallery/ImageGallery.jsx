@@ -1,37 +1,30 @@
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
-
-export const ImageGallery = ({ images }) => {
+import { Gallery } from './ImageGallery.stylized';
+const ImageGallery = ({ images }) => {
+  console.log(images, 'image from gallery');
   return (
-    <ul>
-      ImageGallery
+    <Gallery>
       {images.map(({ id, webformatURL, largeImageURL }) => {
         return (
           <ImageGalleryItem
-            id={id}
-            key={webformatURL}
+            key={id}
             webformatURL={webformatURL}
             largeImageURL={largeImageURL}
           />
         );
       })}
-    </ul>
+    </Gallery>
   );
 };
+export default ImageGallery;
 
-// export const ImageGallery =  ImageGallery({ images })  => {
-//   return (
-//     <ul>
-//       {images.map(({ id, webformatURL, largeImageURL }) => {
-//         return (
-//           <ImageGalleryItem
-//             id={id}
-//             key={webformatURL}
-//             webformatURL={webformatURL}
-//             largeImageURL={largeImageURL}
-//           />
-//         );
-//       })}
-//     </ul>
-//   );
-// }
+ImageGallery.propType = {
+  images: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      webformatURL: PropTypes.string.isRequired,
+      largeImageURL: PropTypes.string.isRequired,
+    }).isRequired
+  ).isRequired,
+};

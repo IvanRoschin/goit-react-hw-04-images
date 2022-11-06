@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { fetchImages } from 'Api/Api';
 import ErrorMessage from 'components/ErrorMessage';
 import { AppStyle } from './App.stylized';
-
 import Searchbar from 'components/Searchbar';
-import { ImageGallery } from 'components/ImageGallery/ImageGallery';
+import ImageGallery from 'components/ImageGallery/ImageGallery';
+import Loader from 'components/Loader';
+import SkeletonCard from 'components/Skeleton/SkeletonCard';
 
 export default class App extends Component {
   state = {
@@ -27,8 +28,6 @@ export default class App extends Component {
   };
 
   componentDidMount() {
-    // const { request, page, per_page } = this.state;
-
     this.setState({
       message: 'To display pictures, enter a query in the search field',
     });
@@ -41,17 +40,29 @@ export default class App extends Component {
         status: 'pending',
       });
 
-      try {
-        const images = await fetchImages(request, page);
-        console.log('Vot eto prokiduvaem;', images.hits);
-        this.setState(prevState => ({
-          images: [...prevState.images, ...images.hits],
-          total: images.total,
-          status: 'resolved',
-        }));
-      } catch (error) {
-        this.setState({ status: 'rejected' });
-      }
+      // try {
+      //   const images = await fetchImages(request, page);
+      //   this.setState(prevState => ({
+      //     images: [...prevState.images, ...images.hits],
+      //     total: images.total,
+      //     status: 'resolved',
+      //   }));
+      // } catch (error) {
+      //   this.setState({ status: 'rejected' });
+      // }
+
+      setTimeout(() => {
+        try {
+          const images = fetchImages(request, page);
+          this.setState(prevState => ({
+            images: [...prevState.images, ...images.hits],
+            total: images.total,
+            status: 'resolved',
+          }));
+        } catch (error) {
+          this.setState({ status: 'rejected' });
+        }
+      }, 23000);
     }
   }
 
@@ -59,7 +70,12 @@ export default class App extends Component {
     const { images, request, status } = this.state;
     if (status === 'idle')
       return <Searchbar onSubmit={this.handleFormSubmit} />;
-    if (status === 'pending') return <div> Loading...</div>;
+    if (status === 'pending')
+      return (
+        <div>
+          <Loader /> <SkeletonCard cards={12} />
+        </div>
+      );
     if (status === 'rejected')
       return (
         <div>
@@ -73,7 +89,7 @@ export default class App extends Component {
       return (
         <AppStyle>
           <Searchbar onSubmit={this.handleFormSubmit} />
-          <div> Gallery Photo must been here</div>
+          <div>Here's your {request}'s</div>
           <ImageGallery images={images}></ImageGallery>
         </AppStyle>
       );

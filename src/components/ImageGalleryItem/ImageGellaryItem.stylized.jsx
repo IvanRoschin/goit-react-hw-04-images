@@ -1,35 +1,18 @@
-// import styled from 'styled-components';
+import styled from 'styled-components';
 
-// export const ContactListLi = styled.li`
-//   display: flex;
-//   flex-direction: row;
-//   justify-content: space-between;
-//   padding: ${p => p.theme.space[3]}px;
-//   padding-left: 0px;
-// `;
+export const GalleryItem = styled.li`
+  border-radius: 2px;
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2),
+    0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12);
+`;
 
-// export const ContactListData = styled.p`
-//   margin-top: 0px;
-//   margin-right: 10px;
-//   align-items: center;
-// `;
-
-// export const ContactListButton = styled.button`
-//   padding: ${p => p.theme.space[3]}px;
-//   text-align: center;
-//   text-transform: uppercase;
-//   outline: none;
-//   border: ${p => p.theme.borders.normal} ${p => p.theme.colors.transparent};
-//   box-shadow: 0 0 20px ${p => p.theme.colors.accent};
-//   color: ${p => p.theme.colors.white};
-//   background: ${p => p.theme.colors.primary};
-//   background-size: 200% auto;
-//   cursor: pointer;
-//   transition: ${p => p.theme.transition.main};
-//   &:hover {
-//     color: ${p => p.theme.colors.primary};
-//     text-decoration: none;
-//     background: ${p => p.theme.colors.white};
-//     border-color: ${p => p.theme.colors.primary};
-//   }
-// `;
+export const GalleryImage = styled.img`
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  &:hover {
+    transform: scale(1.03);
+    cursor: zoom-in;
+  }
+`;

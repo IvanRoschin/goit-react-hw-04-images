@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+
+import PropTypes from 'prop-types';
+import { GalleryItem, GalleryImage } from './ImageGellaryItem.stylized';
 
 export default class ImageGalleryItem extends Component {
   state = {
@@ -7,20 +9,18 @@ export default class ImageGalleryItem extends Component {
   };
 
   render() {
-    console.log(this.props, 'Eto prishlo v item');
-    console.log(this.props.webformatURL, 'Eto ssilka');
-    const { webformatURL, alt } = this.props;
+    const { webformatURL, tags } = this.props;
 
     return (
-      <li className="gallery-item">
-        <img src={webformatURL} alt={alt} />
-      </li>
+      <GalleryItem>
+        <GalleryImage src={webformatURL} alt={tags} />
+      </GalleryItem>
     );
   }
 }
 
-// ImageGalleryItem.propType = {
-//   id: PropTypes.string.isRequired,
-//   url: PropTypes.string.isRequired,
-//   alt: PropTypes.string.isRequired,
-// };
+ImageGalleryItem.propType = {
+  id: PropTypes.string.isRequired,
+  webformatURL: PropTypes.string.isRequired,
+  largeImageURL: PropTypes.string.isRequired,
+};
