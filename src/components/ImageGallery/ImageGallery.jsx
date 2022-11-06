@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
 import { Gallery } from './ImageGallery.stylized';
 const ImageGallery = ({ images }) => {
-  console.log(images, 'image from gallery');
   return (
     <Gallery>
       {images.map(({ id, webformatURL, largeImageURL }) => {

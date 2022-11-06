@@ -1,16 +1,16 @@
 import { RotatingLines } from 'react-loader-spinner';
-
+import { Spinner, LoadingText } from '../Skeleton/Skeleton.stylized';
 export default function ImagesPendungView() {
   return (
-    <div role="alert">
+    <Spinner role="alert">
       <RotatingLines
-        strokeColor="red"
+        strokeColor="#3f51b5"
         strokeWidth="3"
         animationDuration="0.75"
-        width="32"
+        width="42"
         visible={true}
       />
-      Loading
-    </div>
+      <LoadingText>Loading...</LoadingText>
+    </Spinner>
   );
 }

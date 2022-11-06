@@ -1,11 +1,20 @@
 import React, { Component } from 'react';
 import { fetchImages } from 'Api/Api';
+import IdleMessage from 'components/IdleMessage';
 import ErrorMessage from 'components/ErrorMessage';
-import { AppStyle } from './App.stylized';
+import RequestMessage from 'components/RequestMessage';
 import Searchbar from 'components/Searchbar';
 import ImageGallery from 'components/ImageGallery/ImageGallery';
-import Loader from 'components/Loader';
-import SkeletonCard from 'components/Skeleton/SkeletonCard';
+import LoadMoreButton from 'components/Button/';
+import ImagesSkeleton from 'components/Skeleton';
+import { Box } from 'components/Box/Box';
+
+const Status = {
+  IDLE: 'idle',
+  PENDING: 'pending',
+  RESOLVED: 'resolved',
+  REJECTED: 'rejected',
+};
 
 export default class App extends Component {
   state = {
@@ -13,18 +22,9 @@ export default class App extends Component {
     request: '',
     page: 1,
     total: 0,
-    largeImageURL: '',
-    message: '',
     error: null,
-    status: 'idle',
-  };
-
-  // handleFormSubmit = request => {
-  //   this.setState({ request, images: [], page: 1, total: 0 });
-  // };
-
-  handleFormSubmit = request => {
-    this.setState({ request });
+    message: '',
+    status: Status.IDLE,
   };
 
   componentDidMount() {
@@ -37,62 +37,64 @@ export default class App extends Component {
     const { request, page } = this.state;
     if (prevState.request !== request || prevState.page !== page) {
       this.setState({
-        status: 'pending',
+        status: Status.PENDING,
       });
 
-      // try {
-      //   const images = await fetchImages(request, page);
-      //   this.setState(prevState => ({
-      //     images: [...prevState.images, ...images.hits],
-      //     total: images.total,
-      //     status: 'resolved',
-      //   }));
-      // } catch (error) {
-      //   this.setState({ status: 'rejected' });
-      // }
+      try {
+        const images = await fetchImages(request, page);
+        this.setState(prevState => ({
+          images: [...prevState.images, ...images.hits],
+          total: images.total,
+          status: Status.RESOLVED,
+          message: `Here is your ${request}s`,
+        }));
+      } catch (error) {
+        this.setState({
+          status: Status.REJECTED,
+          message: `Sorry, but where are no images for your request ${request}`,
+        });
+      }
 
-      setTimeout(() => {
-        try {
-          const images = fetchImages(request, page);
-          this.setState(prevState => ({
-            images: [...prevState.images, ...images.hits],
-            total: images.total,
-            status: 'resolved',
-          }));
-        } catch (error) {
-          this.setState({ status: 'rejected' });
-        }
-      }, 23000);
+      //   setTimeout(() => {
+      //     try {
+      //       const images = fetchImages(request, page);
+      //       this.setState(prevState => ({
+      //         images: [...prevState.images, ...images.hits],
+      //         total: images.total,
+      //         status: Status.RESOLVED,
+      //       }));
+      //     } catch (error) {
+      //       this.setState({ status: Status.REJECTED });
+      //     }
+      //   }, 23000);
     }
   }
 
+  handleFormSubmit = request => {
+    this.setState({ request, images: [], page: 1, total: 0 });
+  };
+
+  loadMore = () => {
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+    }));
+  };
+
   render() {
-    const { images, request, status } = this.state;
-    if (status === 'idle')
-      return <Searchbar onSubmit={this.handleFormSubmit} />;
-    if (status === 'pending')
-      return (
-        <div>
-          <Loader /> <SkeletonCard cards={12} />
-        </div>
-      );
-    if (status === 'rejected')
-      return (
-        <div>
-          <Searchbar onSubmit={this.handleFormSubmit} />
-          <ErrorMessage
-            message={`Sorry, but where are no images for your request ${request}`}
-          ></ErrorMessage>
-        </div>
-      );
-    if (status === 'resolved') {
-      return (
-        <AppStyle>
-          <Searchbar onSubmit={this.handleFormSubmit} />
-          <div>Here's your {request}'s</div>
-          <ImageGallery images={images}></ImageGallery>
-        </AppStyle>
-      );
-    }
+    const { images, status, total, message } = this.state;
+
+    return (
+      <Box>
+        <Searchbar onSubmit={this.handleFormSubmit} />
+        {status === 'idle' && <IdleMessage message={message} />}
+        {status === 'pending' && <ImagesSkeleton />}
+        {status === 'rejected' && <ErrorMessage message={message} />}
+        {status === 'resolved' && <RequestMessage message={message} />}
+        {status === 'resolved' && <ImageGallery images={images} />}
+        {status === 'resolved' && images.length < total && (
+          <LoadMoreButton onClick={this.loadMore} />
+        )}
+      </Box>
+    );
   }
 }
