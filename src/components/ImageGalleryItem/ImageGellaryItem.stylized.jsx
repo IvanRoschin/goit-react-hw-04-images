@@ -16,3 +16,7 @@ export const GalleryImage = styled.img`
     cursor: zoom-in;
   }
 `;
+
+export const ModalLagreImage = styled.img`
+  background-color: ${p => p.theme.colors.white};
+`;

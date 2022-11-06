@@ -54,19 +54,6 @@ export default class App extends Component {
           message: `Sorry, but where are no images for your request ${request}`,
         });
       }
-
-      //   setTimeout(() => {
-      //     try {
-      //       const images = fetchImages(request, page);
-      //       this.setState(prevState => ({
-      //         images: [...prevState.images, ...images.hits],
-      //         total: images.total,
-      //         status: Status.RESOLVED,
-      //       }));
-      //     } catch (error) {
-      //       this.setState({ status: Status.REJECTED });
-      //     }
-      //   }, 23000);
     }
   }
 
