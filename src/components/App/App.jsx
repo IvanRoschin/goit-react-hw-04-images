@@ -34,6 +34,8 @@ export default class App extends Component {
   }
 
   async componentDidUpdate(prevProps, prevState) {
+    console.log(this.state.images);
+
     const { request, page } = this.state;
     if (prevState.request !== request || prevState.page !== page) {
       this.setState({

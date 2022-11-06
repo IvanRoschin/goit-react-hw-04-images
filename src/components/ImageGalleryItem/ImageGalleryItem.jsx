@@ -17,22 +17,26 @@ class ImageGalleryItem extends Component {
   };
 
   render() {
-    const { webformatURL, alt, largeImage } = this.props;
+    console.log(this.props.images);
+    const { webformatURL, tags, largeImageURL } = this.props;
     const { showModal } = this.state;
+    console.log(webformatURL, 'webformatURL');
+    console.log(tags, 'alt');
+    console.log(largeImageURL, 'largeImage');
 
     return (
       <>
         <GalleryItem onClick={this.toggleModal}>
           <GalleryImage
             src={webformatURL}
-            alt={alt}
+            alt={tags}
             width="350"
             loading="lazy"
           />
         </GalleryItem>
         {showModal && (
           <Modal onClose={this.toggleModal}>
-            <ModalLagreImage src={largeImage} alt={alt} loading="lazy" />
+            <ModalLagreImage src={largeImageURL} alt={tags} loading="lazy" />
           </Modal>
         )}
       </>
