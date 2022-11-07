@@ -16,7 +16,6 @@ export const MessageTitle = styled.h2`
   font-weight: ${p => p.theme.fontWeights.normal}`;
 
 export const MessageImage = styled.img`
-  margin-top: ${p => p.theme.space[4]}px;
   object-fit: cover;
   transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 2px;
