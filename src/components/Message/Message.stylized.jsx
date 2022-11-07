@@ -8,12 +8,12 @@ export const MessageContainer = styled.div`
 `;
 
 export const MessageTitle = styled.h2`
-text-aling-center;
+  text-aling-center;
+  margin-top: ${p => p.theme.space[4]}px;
   margin-bottom: ${p => p.theme.space[4]}px;
   font-family: ${p => p.theme.fonts.heading};
   font-size: ${p => p.theme.fontSizes.l};
-  font-weight: ${p => p.theme.fontWeights.normal};
-`;
+  font-weight: ${p => p.theme.fontWeights.normal}`;
 
 export const MessageImage = styled.img`
   margin-top: ${p => p.theme.space[4]}px;
