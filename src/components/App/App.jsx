@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import { fetchImages } from 'Api/Api';
 import Message from 'components/Message';
-// import IdleMessage from 'components/IdleMessage';
-// import ErrorMessage from 'components/ErrorMessage';
-// import RequestMessage from 'components/RequestMessage';
 import Searchbar from 'components/Searchbar';
 import ImageGallery from 'components/ImageGallery/ImageGallery';
 import LoadMoreButton from 'components/Button/';
@@ -76,11 +73,10 @@ export default class App extends Component {
     return (
       <Box>
         <Searchbar onSubmit={this.handleFormSubmit} />
+        <ImageGallery images={images} />
         {status === 'idle' && <Message message={message} status={status} />}
         {status === 'pending' && <ImagesSkeleton />}
         {status === 'rejected' && <Message message={message} status={status} />}
-        {status === 'resolved' && <Message message={message} status={status} />}
-        {status === 'resolved' && <ImageGallery images={images} />}
         {status === 'resolved' && images.length < total && (
           <LoadMoreButton onClick={this.loadMore} />
         )}
