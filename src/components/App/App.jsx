@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { useState, useEffect } from 'react';
 import { fetchImages } from 'Api/Api';
 import Message from 'components/Message';
 import Searchbar from 'components/Searchbar';
@@ -14,73 +14,59 @@ const Status = {
   REJECTED: 'rejected',
 };
 
-export default class App extends Component {
-  state = {
-    images: [],
-    request: '',
-    page: 1,
-    total: 0,
-    error: null,
-    message: '',
-    status: Status.IDLE,
-  };
+const App = () => {
+  const [images, setImages] = useState([]);
+  const [request, setRequest] = useState('');
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [notify, setNotify] = useState('');
+  const [status, setStatus] = useState(Status.IDLE);
 
-  componentDidMount() {
-    this.setState({
-      message: 'To display pictures, enter a query in the search field',
-    });
-  }
+  useEffect(() => {
+    if (!request) {
+      setNotify('To display pictures, enter a query in the search field');
+      return;
+    }
 
-  async componentDidUpdate(prevProps, prevState) {
-    console.log(this.state.images);
-
-    const { request, page } = this.state;
-    if (prevState.request !== request || prevState.page !== page) {
-      this.setState({
-        status: Status.PENDING,
-      });
+    async function getImages() {
+      setStatus(Status.PENDING);
+      setNotify`Sorry, but where are no images for your request ${request}`;
 
       try {
         const images = await fetchImages(request, page);
-        this.setState(prevState => ({
-          images: [...prevState.images, ...images.hits],
-          total: images.total,
-          status: Status.RESOLVED,
-          message: `Here is your ${request}s`,
-        }));
+        setNotify(`Here is your ${request}s`);
+        setImages(prevState => [...prevState, ...images.hits]);
+        setTotal(images.total);
+        setStatus(Status.RESOLVED);
       } catch (error) {
-        this.setState({
-          status: Status.REJECTED,
-          message: `Sorry, but where are no images for your request ${request}`,
-        });
+        setStatus(Status.REJECTED);
       }
     }
-  }
+    getImages();
+  }, [request, page]);
 
-  handleFormSubmit = request => {
-    this.setState({ request, images: [], page: 1, total: 0 });
+  const handleFormSubmit = request => {
+    setRequest(request);
+    setImages([]);
+    setPage(1);
+    setTotal(0);
   };
 
-  loadMore = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-    }));
+  const loadMore = () => {
+    setPage(prevState => prevState + 1);
   };
 
-  render() {
-    const { images, status, total, message } = this.state;
+  return (
+    <Box>
+      <Searchbar onSubmit={handleFormSubmit} />
+      <Message message={notify} status={status} />
+      <ImageGallery images={images} />
+      {status === Status.PENDING && <ImagesSkeleton />}
+      {status === Status.RESOLVED && images.length < total && (
+        <LoadMoreButton onClick={loadMore} />
+      )}
+    </Box>
+  );
+};
 
-    return (
-      <Box>
-        <Searchbar onSubmit={this.handleFormSubmit} />
-        <ImageGallery images={images} />
-        {status === 'idle' && <Message message={message} status={status} />}
-        {status === 'pending' && <ImagesSkeleton />}
-        {status === 'rejected' && <Message message={message} status={status} />}
-        {status === 'resolved' && images.length < total && (
-          <LoadMoreButton onClick={this.loadMore} />
-        )}
-      </Box>
-    );
-  }
-}
+export default App;

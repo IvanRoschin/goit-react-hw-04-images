@@ -1,5 +1,5 @@
-import { Component } from 'react';
-import PropTypes from 'prop-types';
+import { useState } from 'react';
+// import PropTypes from 'prop-types';
 import { BiSearch } from 'react-icons/bi';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -12,25 +12,16 @@ import {
   SearchFormlabel,
 } from './Searchbar.stylized';
 
-export default class Searchbar extends Component {
-  static defaultProps = {
-    request: PropTypes.string.isRequired,
-    onSubmit: PropTypes.func.isRequired,
+export default function Searchbar({ onSubmit }) {
+  const [request, setRequest] = useState('');
+
+  const handleChange = e => {
+    setRequest(e.currentTarget.value.toLowerCase());
   };
 
-  state = {
-    request: '',
-  };
-
-  handleChange = e => {
-    this.setState({
-      request: e.target.value.toLowerCase(),
-    });
-  };
-
-  handleSubmit = e => {
+  const handleSubmit = e => {
     e.preventDefault();
-    if (this.state.request.trim() === '') {
+    if (request.trim() === '') {
       return toast.error('Please, type search', {
         position: 'top-right',
         autoClose: 3000,
@@ -42,30 +33,27 @@ export default class Searchbar extends Component {
         theme: 'colored',
       });
     }
-    this.props.onSubmit(this.state.request);
-    this.setState({ request: '' });
+    onSubmit(request);
+    setRequest('');
   };
 
-  render() {
-    const { request } = this.state;
-    return (
-      <SearchbarHeader onSubmit={this.handleSubmit}>
-        <SearchForm>
-          <SearchFormButton type="submit">
-            <BiSearch size={16} />
-            <SearchFormlabel>Search</SearchFormlabel>
-          </SearchFormButton>
-          <SearchFormInput
-            type="text"
-            name="name"
-            value={request}
-            autoComplete="off"
-            autoFocus
-            placeholder="Search images and photos"
-            onChange={this.handleChange}
-          />
-        </SearchForm>
-      </SearchbarHeader>
-    );
-  }
+  return (
+    <SearchbarHeader onSubmit={handleSubmit}>
+      <SearchForm>
+        <SearchFormButton type="submit">
+          <BiSearch size={16} />
+          <SearchFormlabel>Search</SearchFormlabel>
+        </SearchFormButton>
+        <SearchFormInput
+          type="text"
+          name="request"
+          value={request}
+          autoComplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+          onChange={handleChange}
+        />
+      </SearchForm>
+    </SearchbarHeader>
+  );
 }

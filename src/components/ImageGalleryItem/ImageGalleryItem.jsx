@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'components/Modal';
 import {
@@ -7,42 +7,27 @@ import {
   ModalLagreImage,
 } from './ImageGellaryItem.stylized';
 
-class ImageGalleryItem extends Component {
-  state = {
-    showModal: false,
-  };
+const ImageGalleryItem = ({ webformatURL, tags, largeImageURL }) => {
+  const [showModal, setShowModal] = useState(false);
 
-  toggleModal = () => {
-    this.setState(({ showModal }) => ({ showModal: !showModal }));
-  };
-
-  render() {
-    console.log(this.props.images);
-    const { webformatURL, tags, largeImageURL } = this.props;
-    const { showModal } = this.state;
-    console.log(webformatURL, 'webformatURL');
-    console.log(tags, 'alt');
-    console.log(largeImageURL, 'largeImage');
-
-    return (
-      <>
-        <GalleryItem onClick={this.toggleModal}>
-          <GalleryImage
-            src={webformatURL}
-            alt={tags}
-            width="350"
-            loading="lazy"
-          />
-        </GalleryItem>
-        {showModal && (
-          <Modal onClose={this.toggleModal}>
-            <ModalLagreImage src={largeImageURL} alt={tags} loading="lazy" />
-          </Modal>
-        )}
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <GalleryItem onClick={() => setShowModal(!showModal)}>
+        <GalleryImage
+          src={webformatURL}
+          alt={tags}
+          width="350"
+          loading="lazy"
+        />
+      </GalleryItem>
+      {showModal && (
+        <Modal onClose={() => setShowModal(!showModal)}>
+          <ModalLagreImage src={largeImageURL} alt={tags} loading="lazy" />
+        </Modal>
+      )}
+    </>
+  );
+};
 
 export default ImageGalleryItem;
 
